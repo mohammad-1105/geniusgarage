@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@geniusgarage/ui/button";
 
 export default function Home() {
   return (
@@ -37,20 +38,7 @@ export default function Home() {
           Manage and share your code snippets
         </p>
 
-        <button
-          style={{
-            padding: "0.75rem 1.5rem",
-            fontSize: "1rem",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            fontWeight: "600",
-            backgroundColor: "#0070f3",
-            color: "white",
-          }}
-        >
-          Get Started
-        </button>
+        <Button variant="primary">Get Started</Button>
 
         <p style={{ color: "#666", marginTop: "3rem", fontSize: "0.875rem" }}>
           This is the starter project. You'll build out the full platform as you
