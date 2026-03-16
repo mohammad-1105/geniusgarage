@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 export interface ButtonProps {
@@ -30,9 +32,21 @@ export function Button({
       border: "1px solid #e5e7eb",
     },
   };
+
+  const hoverStyles = {
+    transform: "translateY(-1px)",
+    boxShadow: "0px 4px 8px rgb(0,0,0,0.15)",
+  };
   return (
     <button
       onClick={onClick}
+      onMouseEnter={(e) => {
+        Object.assign(e.currentTarget.style, hoverStyles);
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+      }}
       style={{ ...baseStyle, ...variantStyles[variant] }}
     >
       {children}
