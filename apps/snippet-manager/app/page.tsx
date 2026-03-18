@@ -2,13 +2,15 @@
 
 import { Button } from "@geniusgarage/ui/button";
 import { Card } from "@geniusgarage/ui/card";
+import { SnippetCard } from "@geniusgarage/ui/snippet-card";
 
 interface Snippet {
   id: number;
   title: string;
-  code: string;
   language: string;
+  code: string;
   tags: string[];
+  createdAt: string;
 }
 
 const mockSnippets: Snippet[] = [
@@ -17,6 +19,7 @@ const mockSnippets: Snippet[] = [
     title: "Debounce Function (JavaScript)",
     language: "javascript",
     tags: ["utility", "performance", "frontend"],
+    createdAt: "2024-01-10T08:30:00.000Z",
     code: `function debounce(fn, delay) {
   let timeoutId;
   return function (...args) {
@@ -32,6 +35,7 @@ const mockSnippets: Snippet[] = [
     title: "Fetch API with Error Handling",
     language: "javascript",
     tags: ["api", "async", "error-handling"],
+    createdAt: "2024-01-15T10:00:00.000Z",
     code: `async function fetchData(url) {
   try {
     const res = await fetch(url);
@@ -50,6 +54,7 @@ const mockSnippets: Snippet[] = [
     title: "Express Middleware Logger",
     language: "javascript",
     tags: ["backend", "express", "middleware"],
+    createdAt: "2024-01-20T12:15:00.000Z",
     code: `function logger(req, res, next) {
   console.log(\`\${req.method} \${req.url}\`);
   next();
@@ -62,6 +67,7 @@ app.use(logger);`,
     title: "React useEffect Example",
     language: "tsx",
     tags: ["react", "hooks", "frontend"],
+    createdAt: "2024-02-01T09:45:00.000Z",
     code: `import { useEffect, useState } from "react";
 
 export default function Example() {
@@ -83,6 +89,7 @@ export default function Example() {
     title: "TypeScript Utility Type (Partial Deep)",
     language: "typescript",
     tags: ["typescript", "types", "utility"],
+    createdAt: "2024-02-10T14:20:00.000Z",
     code: `type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object
     ? DeepPartial<T[P]>
@@ -94,6 +101,7 @@ export default function Example() {
     title: "MongoDB Query Example",
     language: "javascript",
     tags: ["database", "mongodb", "backend"],
+    createdAt: "2024-02-18T16:00:00.000Z",
     code: `const users = await db.collection("users").find({
   age: { $gte: 18 },
   isActive: true
@@ -104,6 +112,7 @@ export default function Example() {
     title: "Python: List Comprehension",
     language: "python",
     tags: ["python", "basics"],
+    createdAt: "2024-03-01T07:10:00.000Z",
     code: `squares = [x * x for x in range(10)]
 print(squares)`,
   },
@@ -112,6 +121,7 @@ print(squares)`,
     title: "CSS Flex Centering",
     language: "css",
     tags: ["css", "layout", "frontend"],
+    createdAt: "2024-03-05T11:25:00.000Z",
     code: `.container {
   display: flex;
   justify-content: center;
@@ -124,6 +134,7 @@ print(squares)`,
     title: "SQL: Get Recent Records",
     language: "sql",
     tags: ["sql", "database"],
+    createdAt: "2024-03-10T13:50:00.000Z",
     code: `SELECT *
 FROM orders
 ORDER BY created_at DESC
@@ -134,6 +145,7 @@ LIMIT 10;`,
     title: "JWT Verify Middleware",
     language: "javascript",
     tags: ["auth", "jwt", "backend"],
+    createdAt: "2024-03-15T18:05:00.000Z",
     code: `import jwt from "jsonwebtoken";
 
 export function verifyToken(req, res, next) {
@@ -151,7 +163,6 @@ export function verifyToken(req, res, next) {
 }`,
   },
 ];
-
 export default function Home() {
   return (
     <div className="min-h-screen bg-linear-to-b from-gray-50 to-gray-100 p-8">
@@ -165,34 +176,14 @@ export default function Home() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {mockSnippets.map((snippet) => (
-          <Card key={snippet.id}>
-            <div className="space-y-3">
-              {/* Title and Language */}
-              <div>
-                <h3 className="text-lg font-semibold mb-1">{snippet.title}</h3>
-                <span className="text-sm text-gray-500 font-mono">
-                  {snippet.language}
-                </span>
-              </div>
-
-              {/* Code Preview */}
-              <pre className="bg-gray-900 text-gray-100 p-3 rounded text-sm overflow-x-auto">
-                <code>{snippet.code}</code>
-              </pre>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2">
-                {snippet.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Card>
+          <SnippetCard
+            key={snippet.id}
+            title={snippet.title}
+            language={snippet.language}
+            code={snippet.code}
+            tags={snippet.tags}
+            createdAt={snippet.createdAt}
+          />
         ))}
       </div>
     </div>
