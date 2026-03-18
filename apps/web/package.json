@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@geniusgarage/eslint-config": "workspace:*",
+    "@geniusgarage/typescript-config": "workspace:*",
     "@geniusgarage/ui": "workspace:*",
     "next": "16.1.6",
     "react": "^19.0.0",

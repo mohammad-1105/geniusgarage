@@ -9,7 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@geniusgarage/eslint-config": "workspace:*",
+    "@geniusgarage/typescript-config": "workspace:*",
     "@geniusgarage/ui": "workspace:*",
+    "@geniusgarage/utils": "workspace:*",
     "@tailwindcss/postcss": "^4.2.1",
     "next": "16.1.6",
     "postcss": "^8.5.8",

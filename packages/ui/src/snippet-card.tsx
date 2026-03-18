@@ -10,13 +10,6 @@ interface SnippetCardProps {
   createdAt: string;
 }
 
-// TODO: Export SnippetCard function component that:
-//   - Wraps everything in a Card component
-//   - Shows title as h3
-//   - Shows createdAt below title
-//   - Renders CodeBlock with code and language
-//   - Maps over tags and renders each as a styled span
-
 export function SnippetCard({
   title,
   language,
