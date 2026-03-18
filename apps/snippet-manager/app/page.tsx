@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@geniusgarage/ui/button";
-import { Card } from "@geniusgarage/ui/card";
 import { SnippetCard } from "@geniusgarage/ui/snippet-card";
+import { useState } from "react";
 
 interface Snippet {
   id: number;
@@ -13,178 +13,263 @@ interface Snippet {
   createdAt: string;
 }
 
-const mockSnippets: Snippet[] = [
+const initialSnippets: Snippet[] = [
   {
     id: 1,
-    title: "Debounce Function (JavaScript)",
+    title: "Array Reduce Pattern",
     language: "javascript",
-    tags: ["utility", "performance", "frontend"],
-    createdAt: "2024-01-10T08:30:00.000Z",
-    code: `function debounce(fn, delay) {
-  let timeoutId;
-  return function (...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      fn.apply(this, args);
-    }, delay);
-  };
-}`,
+    code: "const sum = arr.reduce((acc, n) => acc + n, 0)",
+    tags: ["javascript", "array", "functional"],
+    createdAt: "Jan 15, 2026",
   },
   {
     id: 2,
-    title: "Fetch API with Error Handling",
-    language: "javascript",
-    tags: ["api", "async", "error-handling"],
-    createdAt: "2024-01-15T10:00:00.000Z",
-    code: `async function fetchData(url) {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error(\`HTTP error! status: \${res.status}\`);
-    }
-    return await res.json();
-  } catch (error) {
-    console.error("Fetch failed:", error);
-    throw error;
-  }
-}`,
+    title: "React useEffect Cleanup",
+    language: "typescript",
+    code: `useEffect(() => {
+  const timer = setTimeout(() => {}, 1000)
+  return () => clearTimeout(timer)
+}, [])`,
+    tags: ["react", "hooks", "typescript"],
+    createdAt: "Feb 20, 2026",
   },
   {
     id: 3,
-    title: "Express Middleware Logger",
+    title: "Promise.all Pattern",
     language: "javascript",
-    tags: ["backend", "express", "middleware"],
-    createdAt: "2024-01-20T12:15:00.000Z",
-    code: `function logger(req, res, next) {
-  console.log(\`\${req.method} \${req.url}\`);
-  next();
-}
-
-app.use(logger);`,
-  },
-  {
-    id: 4,
-    title: "React useEffect Example",
-    language: "tsx",
-    tags: ["react", "hooks", "frontend"],
-    createdAt: "2024-02-01T09:45:00.000Z",
-    code: `import { useEffect, useState } from "react";
-
-export default function Example() {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    console.log("Count changed:", count);
-  }, [count]);
-
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      {count}
-    </button>
-  );
-}`,
-  },
-  {
-    id: 5,
-    title: "TypeScript Utility Type (Partial Deep)",
-    language: "typescript",
-    tags: ["typescript", "types", "utility"],
-    createdAt: "2024-02-10T14:20:00.000Z",
-    code: `type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object
-    ? DeepPartial<T[P]>
-    : T[P];
-};`,
-  },
-  {
-    id: 6,
-    title: "MongoDB Query Example",
-    language: "javascript",
-    tags: ["database", "mongodb", "backend"],
-    createdAt: "2024-02-18T16:00:00.000Z",
-    code: `const users = await db.collection("users").find({
-  age: { $gte: 18 },
-  isActive: true
-}).toArray();`,
-  },
-  {
-    id: 7,
-    title: "Python: List Comprehension",
-    language: "python",
-    tags: ["python", "basics"],
-    createdAt: "2024-03-01T07:10:00.000Z",
-    code: `squares = [x * x for x in range(10)]
-print(squares)`,
-  },
-  {
-    id: 8,
-    title: "CSS Flex Centering",
-    language: "css",
-    tags: ["css", "layout", "frontend"],
-    createdAt: "2024-03-05T11:25:00.000Z",
-    code: `.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}`,
-  },
-  {
-    id: 9,
-    title: "SQL: Get Recent Records",
-    language: "sql",
-    tags: ["sql", "database"],
-    createdAt: "2024-03-10T13:50:00.000Z",
-    code: `SELECT *
-FROM orders
-ORDER BY created_at DESC
-LIMIT 10;`,
-  },
-  {
-    id: 10,
-    title: "JWT Verify Middleware",
-    language: "javascript",
-    tags: ["auth", "jwt", "backend"],
-    createdAt: "2024-03-15T18:05:00.000Z",
-    code: `import jwt from "jsonwebtoken";
-
-export function verifyToken(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) return res.sendStatus(401);
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch {
-    res.sendStatus(403);
-  }
-}`,
+    code: "const results = await Promise.all(promises.map(p => p()))",
+    tags: ["javascript", "async", "promises"],
+    createdAt: "Mar 10, 2026",
   },
 ];
+
 export default function Home() {
+  const [snippets, setSnippets] = useState<Snippet[]>(initialSnippets);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [newSnippet, setNewSnippet] = useState({
+    title: "",
+    language: "JavaScript",
+    code: "",
+    tags: "",
+  });
+
+  const handleCreateSnippet = () => {
+    if (!newSnippet.title || !newSnippet.code) return;
+
+    const snippet: Snippet = {
+      id: Date.now(),
+      title: newSnippet.title,
+      language: newSnippet.language,
+      code: newSnippet.code,
+      tags: newSnippet.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+      createdAt: new Date().toLocaleDateString("en-US"),
+    };
+
+    // add to snippets array
+    setSnippets([snippet, ...snippets]);
+
+    // close modal and rest form
+    setShowModal(false);
+    setNewSnippet({
+      title: "",
+      language: "javascript",
+      code: "",
+      tags: "",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-b from-gray-50 to-gray-100 p-8">
-      <div className="max-w-6xl mx-auto"></div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-4xl font-bold">My Snippets</h1>
-        <Button onClick={() => console.log("snippet created")}>
-          + New snippet
-        </Button>
-      </div>
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold">My Snippets</h1>
+          <Button onClick={() => setShowModal(true)}>+ New Snippet</Button>
+        </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {mockSnippets.map((snippet) => (
-          <SnippetCard
-            key={snippet.id}
-            title={snippet.title}
-            language={snippet.language}
-            code={snippet.code}
-            tags={snippet.tags}
-            createdAt={snippet.createdAt}
-          />
-        ))}
+        {showModal && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "2rem",
+                borderRadius: "0.5rem",
+                width: "90%",
+                maxWidth: "600px",
+              }}
+            >
+              <h2 style={{ marginTop: 0 }}>Create New Snippet</h2>
+
+              {/* Title Input */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "600",
+                  }}
+                >
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={newSnippet.title}
+                  onChange={(e) =>
+                    setNewSnippet({ ...newSnippet, title: e.target.value })
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    borderRadius: "0.25rem",
+                    border: "1px solid #ddd",
+                  }}
+                  placeholder="My awesome snippet"
+                />
+              </div>
+
+              {/* Language Select */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "600",
+                  }}
+                >
+                  Language
+                </label>
+                <select
+                  value={newSnippet.language}
+                  onChange={(e) =>
+                    setNewSnippet({ ...newSnippet, language: e.target.value })
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    borderRadius: "0.25rem",
+                    border: "1px solid #ddd",
+                  }}
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="python">Python</option>
+                  <option value="go">Go</option>
+                  <option value="rust">Rust</option>
+                </select>
+              </div>
+
+              {/* Code Textarea */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "600",
+                  }}
+                >
+                  Code
+                </label>
+                <textarea
+                  value={newSnippet.code}
+                  onChange={(e) =>
+                    setNewSnippet({ ...newSnippet, code: e.target.value })
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    borderRadius: "0.25rem",
+                    border: "1px solid #ddd",
+                    fontFamily: "monospace",
+                    minHeight: "150px",
+                  }}
+                  placeholder="console.log('Hello world')"
+                />
+              </div>
+
+              {/* Tags Input */}
+              <div style={{ marginBottom: "1.5rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "600",
+                  }}
+                >
+                  Tags (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={newSnippet.tags}
+                  onChange={(e) =>
+                    setNewSnippet({ ...newSnippet, tags: e.target.value })
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    borderRadius: "0.25rem",
+                    border: "1px solid #ddd",
+                  }}
+                  placeholder="javascript, array, functional"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: "1rem",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setShowModal(false);
+                    setNewSnippet({
+                      title: "",
+                      language: "javascript",
+                      code: "",
+                      tags: "",
+                    });
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={handleCreateSnippet}>Create Snippet</Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Snippet Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {snippets.map((snippet) => (
+            <SnippetCard
+              key={snippet.id}
+              title={snippet.title}
+              language={snippet.language}
+              code={snippet.code}
+              tags={snippet.tags}
+              createdAt={snippet.createdAt}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
