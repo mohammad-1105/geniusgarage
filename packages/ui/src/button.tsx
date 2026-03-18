@@ -39,6 +39,7 @@ export function Button({
   };
   return (
     <button
+      className="bg-blue-500"
       onClick={onClick}
       onMouseEnter={(e) => {
         Object.assign(e.currentTarget.style, hoverStyles);
